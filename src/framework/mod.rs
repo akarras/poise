@@ -165,7 +165,7 @@ impl<U, E> Framework<U, E> {
             .application_id(application_id.0)
             .event_handler(event_handler)
             .await?
-            .start()
+            .start_autosharded()
             .await?;
 
         edit_track_cache_purge_task.abort();
