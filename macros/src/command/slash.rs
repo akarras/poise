@@ -44,6 +44,10 @@ pub fn generate_slash_command_spec(
         )
     })?;
 
+    if description.len() <= 0 || description.len() >= 100 {
+        Err(syn::Error::new(inv.function.sig.span(), "slash command descriptions must be between 1 and 100 characters."))?
+    }
+
     let mut parameter_builders = Vec::new();
     for param in inv.parameters {
         let description = param.more.description.as_ref().ok_or_else(|| {
@@ -52,6 +56,10 @@ pub fn generate_slash_command_spec(
                 "slash command parameters must have a description",
             )
         })?;
+
+        if description.len() <= 0 || description.len() >= 100 {
+            Err(syn::Error::new(param.span, "slash command parameter descriptions must be be between 1 and 100 characters"))?
+        }
 
         let (mut required, type_) =
             match extract_option_type(&param.type_).or_else(|| extract_vec_type(&param.type_)) {
